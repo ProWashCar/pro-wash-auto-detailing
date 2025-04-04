@@ -1,254 +1,584 @@
-document.addEventListener('DOMContentLoaded', function() {
-    // ======================
-    // FUNZIONALITÀ GENERALI
-    // ======================
-    
-    // Menu mobile
-    const menuToggle = document.createElement('button');
-    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-    menuToggle.classList.add('menu-toggle');
-    document.querySelector('header').appendChild(menuToggle);
+:root {
+    --primary: #2c3e50;
+    --secondary: #f1c40f;
+    --accent: #e67e22;
+    --light: #ecf0f1;
+    --dark: #1a252f;
+}
 
-    const navMenu = document.querySelector('nav ul');
-    
-    menuToggle.addEventListener('click', function() {
-        navMenu.classList.toggle('show');
-        this.classList.toggle('open');
-    });
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
 
-    // Smooth scrolling
-    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-        anchor.addEventListener('click', function(e) {
-            if(this.hash !== "") {
-                e.preventDefault();
-                
-                const target = document.querySelector(this.hash);
-                if(target) {
-                    window.scrollTo({
-                        top: target.offsetTop - 80,
-                        behavior: 'smooth'
-                    });
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    color: #333;
+    background: #f9f9f9;
+}
 
-                    // Chiudi menu mobile se aperto
-                    navMenu.classList.remove('show');
-                    menuToggle.classList.remove('open');
-                }
-            }
-        });
-    });
+/* Header */
+header {
+    background: var(--primary);
+    color: white;
+    padding: 1rem 2rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
 
-    // Animazioni al caricamento
-    const animateOnScroll = function() {
-        const elements = document.querySelectorAll('.servizio, .prezzi-container, .contatti-form');
-        
-        elements.forEach(element => {
-            const elementPosition = element.getBoundingClientRect().top;
-            const screenPosition = window.innerHeight / 1.2;
-            
-            if(elementPosition < screenPosition) {
-                element.style.opacity = '1';
-                element.style.transform = 'translateY(0)';
-            }
-        });
-    };
+.logo-container {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
 
-    // Imposta stato iniziale animazioni
-    const servizi = document.querySelectorAll('.servizio');
-    const prezziContainer = document.querySelector('.prezzi-container');
-    const contattiForm = document.querySelector('.contatti-form');
-    
-    servizi.forEach(servizio => {
-        servizio.style.opacity = '0';
-        servizio.style.transform = 'translateY(30px)';
-        servizio.style.transition = 'all 0.6s ease-out';
-    });
-    
-    if(prezziContainer) {
-        prezziContainer.style.opacity = '0';
-        prezziContainer.style.transform = 'translateY(30px)';
-        prezziContainer.style.transition = 'all 0.6s ease-out 0.2s';
+.logo-img {
+    background: url('Black and Blue Modern Automotive Logo.png') no-repeat center;
+    background-size: contain;
+    height: 60px;
+    width: 180px;
+}
+
+header h1 {
+    font-size: 1.5rem;
+    white-space: nowrap;
+    color: white;
+}
+
+nav ul {
+    display: flex;
+    list-style: none;
+    gap: 1.5rem;
+}
+
+nav a {
+    color: white;
+    text-decoration: none;
+    font-weight: 600;
+    transition: color 0.3s;
+    padding: 0.5rem 0;
+    position: relative;
+}
+
+nav a:hover {
+    color: var(--secondary);
+}
+
+nav a::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0;
+    height: 2px;
+    background: var(--secondary);
+    transition: width 0.3s;
+}
+
+nav a:hover::after {
+    width: 100%;
+}
+
+/* Hero Section */
+.hero {
+    height: 80vh;
+    position: relative;
+    background: url('Black and Blue Modern Automotive Logo.png') center/cover no-repeat;
+    background-color: var(--primary);
+    background-blend-mode: overlay;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: white;
+}
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+}
+
+.hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 800px;
+    padding: 0 2rem;
+}
+
+.hero h2 {
+    font-size: 3.5rem;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+}
+
+.hero p {
+    font-size: 1.2rem;
+    margin-bottom: 2rem;
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+}
+
+.cta-button {
+    display: inline-block;
+    background: var(--secondary);
+    color: var(--primary);
+    padding: 1rem 2.5rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: all 0.3s;
+    border: 2px solid var(--secondary);
+}
+
+.cta-button:hover {
+    background: transparent;
+    color: var(--secondary);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Sezione Servizi */
+.servizi {
+    padding: 5rem 2rem;
+    text-align: center;
+    background: white;
+}
+
+.servizi h2 {
+    font-size: 2.8rem;
+    color: var(--primary);
+    margin-bottom: 3rem;
+    position: relative;
+    display: inline-block;
+}
+
+.servizi h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: var(--secondary);
+}
+
+.servizi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.servizio {
+    background: var(--light);
+    padding: 2.5rem 2rem;
+    border-radius: 10px;
+    transition: transform 0.3s, box-shadow 0.3s;
+    text-align: center;
+}
+
+.servizio:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+}
+
+.servizio i {
+    font-size: 3rem;
+    color: var(--secondary);
+    margin-bottom: 1.5rem;
+}
+
+.servizio h3 {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--primary);
+}
+
+.servizio p {
+    color: #666;
+}
+
+/* Sezione Prezzi */
+.prezzi {
+    padding: 5rem 2rem;
+    background: var(--light);
+    text-align: center;
+}
+
+.prezzi h2 {
+    font-size: 2.8rem;
+    color: var(--primary);
+    margin-bottom: 3rem;
+    position: relative;
+    display: inline-block;
+}
+
+.prezzi h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: var(--secondary);
+}
+
+.prezzi-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+
+.listino-img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+}
+
+/* Sezione Contatti */
+.contatti {
+    padding: 5rem 2rem;
+    background: var(--primary);
+    color: white;
+}
+
+.contatti h2 {
+    font-size: 2.8rem;
+    margin-bottom: 3rem;
+    text-align: center;
+    position: relative;
+    display: inline-block;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.contatti h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 3px;
+    background: var(--secondary);
+}
+
+.contatti-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 3rem;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+.social-contatti {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.social-link {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    color: white;
+    text-decoration: none;
+    font-size: 1.1rem;
+    transition: color 0.3s;
+}
+
+.social-link i {
+    font-size: 1.5rem;
+    color: var(--secondary);
+    width: 30px;
+    text-align: center;
+}
+
+.social-link:hover {
+    color: var(--secondary);
+}
+
+.contatti-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.contatti-form input,
+.contatti-form textarea {
+    padding: 1rem;
+    border: none;
+    border-radius: 5px;
+    font-family: inherit;
+    font-size: 1rem;
+    background: rgba(255,255,255,0.9);
+}
+
+.contatti-form textarea {
+    min-height: 150px;
+    resize: vertical;
+}
+
+.contatti-form button {
+    background: var(--secondary);
+    color: var(--primary);
+    border: none;
+    padding: 1rem;
+    font-size: 1.1rem;
+    font-weight: 600;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+.contatti-form button:hover {
+    background: var(--accent);
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+/* Footer */
+footer {
+    background: var(--dark);
+    color: white;
+    padding: 2rem;
+    text-align: center;
+}
+
+.footer-content {
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Admin Panel */
+#adminPanel {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: white;
+    z-index: 1000;
+    padding: 20px;
+    overflow-y: auto;
+    display: none;
+}
+
+.admin-container {
+    max-width: 1200px;
+    margin: 0 auto;
+    position: relative;
+}
+
+.admin-close-btn {
+    position: absolute;
+    top: 0;
+    right: 0;
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+}
+
+.admin-toolbar {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+#messageSearch {
+    flex: 1;
+    padding: 10px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.admin-btn {
+    background: var(--primary);
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 4px;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    text-decoration: none;
+    font-size: 14px;
+    transition: all 0.3s;
+}
+
+.admin-btn:hover {
+    opacity: 0.9;
+    transform: translateY(-2px);
+}
+
+.delete-btn {
+    background: #e74c3c;
+}
+
+.messages-list {
+    background: #f9f9f9;
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 20px;
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.message-item {
+    padding: 15px;
+    border-bottom: 1px solid #eee;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.message-item:hover {
+    background: #f0f7ff;
+}
+
+.message-item.unread {
+    background: #e8f4fc;
+    font-weight: 600;
+}
+
+.message-preview {
+    display: flex;
+    justify-content: space-between;
+}
+
+.message-sender {
+    color: var(--primary);
+    font-weight: 600;
+}
+
+.message-date {
+    color: #666;
+    font-size: 0.9em;
+}
+
+.message-preview-text {
+    color: #666;
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.message-detail {
+    background: white;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 20px;
+    margin-top: 20px;
+    display: none;
+}
+
+.message-content {
+    line-height: 1.6;
+    margin: 20px 0;
+    white-space: pre-line;
+}
+
+.message-actions {
+    display: flex;
+    gap: 10px;
+}
+
+#adminAccessBtn {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    background: var(--primary);
+    color: white;
+    border: none;
+    cursor: pointer;
+    z-index: 999;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s;
+}
+
+#adminAccessBtn:hover {
+    transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        padding: 1rem;
     }
-    
-    if(contattiForm) {
-        contattiForm.style.opacity = '0';
-        contattiForm.style.transform = 'translateY(30px)';
-        contattiForm.style.transition = 'all 0.6s ease-out 0.4s';
+
+    .logo-container {
+        margin-bottom: 1rem;
     }
 
-    // Esegui animazioni
-    animateOnScroll();
-    window.addEventListener('scroll', animateOnScroll);
-
-    // Header che cambia allo scroll
-    window.addEventListener('scroll', function() {
-        const header = document.querySelector('header');
-        if(window.scrollY > 100) {
-            header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-            header.style.background = 'rgba(44, 62, 80, 0.95)';
-        } else {
-            header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-            header.style.background = 'var(--primary)';
-        }
-    });
-
-    // ======================
-    // FUNZIONALITÀ ADMIN
-    // ======================
-    const ADMIN_PASSWORD = "ProWash2024"; // CAMBIA IN PRODUZIONE!
-    let currentMessageIndex = null;
-
-    // Elementi UI
-    const adminAccessBtn = document.getElementById('adminAccessBtn');
-    const adminPanel = document.getElementById('adminPanel');
-    const closeAdminPanel = document.getElementById('closeAdminPanel');
-    const refreshMessages = document.getElementById('refreshMessages');
-    const deleteMessageBtn = document.getElementById('deleteMessage');
-    const messageSearch = document.getElementById('messageSearch');
-
-    // Mostra pulsante admin
-    adminAccessBtn.style.display = 'flex';
-
-    // Event Listeners
-    adminAccessBtn.addEventListener('click', showAdminPanel);
-    closeAdminPanel.addEventListener('click', hideAdminPanel);
-    refreshMessages.addEventListener('click', loadMessages);
-    deleteMessageBtn.addEventListener('click', deleteCurrentMessage);
-    messageSearch.addEventListener('input', loadMessages);
-
-    // Funzioni principali
-    function showAdminPanel() {
-        const password = prompt("Inserisci la password di amministrazione:");
-        
-        if(password === ADMIN_PASSWORD) {
-            adminPanel.style.display = 'block';
-            loadMessages();
-        } else if(password !== null) {
-            alert("Password errata!");
-        }
+    nav ul {
+        flex-direction: column;
+        gap: 0.5rem;
+        text-align: center;
     }
 
-    function hideAdminPanel() {
-        adminPanel.style.display = 'none';
-        currentMessageIndex = null;
-        document.getElementById('messageDetail').style.display = 'none';
+    .hero {
+        height: 70vh;
     }
 
-    function loadMessages() {
-        const messages = getMessages();
-        const searchTerm = messageSearch.value.toLowerCase();
-        const messagesList = document.getElementById('messagesList');
-        
-        messagesList.innerHTML = '';
-        
-        const filteredMessages = messages.filter(msg => 
-            msg.name.toLowerCase().includes(searchTerm) || 
-            msg.email.toLowerCase().includes(searchTerm) ||
-            msg.message.toLowerCase().includes(searchTerm)
-        );
-        
-        if(filteredMessages.length === 0) {
-            messagesList.innerHTML = '<div class="no-messages">Nessun messaggio trovato</div>';
-            document.getElementById('messageDetail').style.display = 'none';
-            return;
-        }
-        
-        filteredMessages.forEach((msg, index) => {
-            const messageElement = document.createElement('div');
-            messageElement.className = `message-item ${msg.read ? '' : 'unread'}`;
-            messageElement.innerHTML = `
-                <div class="message-preview">
-                    <div>
-                        <span class="message-sender">${msg.name}</span>
-                        <span class="message-preview-text">${msg.message.substring(0, 60)}${msg.message.length > 60 ? '...' : ''}</span>
-                    </div>
-                    <span class="message-date">${formatDate(msg.date)}</span>
-                </div>
-            `;
-            
-            messageElement.addEventListener('click', () => viewMessage(index));
-            messagesList.appendChild(messageElement);
-        });
+    .hero h2 {
+        font-size: 2.5rem;
     }
 
-    function viewMessage(index) {
-        const messages = getMessages();
-        const msg = messages[index];
-        currentMessageIndex = index;
-        
-        // Segna come letto
-        if(!msg.read) {
-            msg.read = true;
-            saveMessages(messages);
-        }
-        
-        document.getElementById('detailName').textContent = msg.name;
-        document.getElementById('detailEmail').textContent = msg.email;
-        document.getElementById('detailDate').textContent = formatDate(msg.date, true);
-        document.getElementById('detailMessage').textContent = msg.message;
-        document.getElementById('replyLink').href = `mailto:${msg.email}?subject=Risposta al tuo messaggio&body=Ciao ${msg.name},\n\n`;
-        
-        document.getElementById('messageDetail').style.display = 'block';
+    .servizi, .prezzi, .contatti {
+        padding: 3rem 1rem;
     }
 
-    function deleteCurrentMessage() {
-        if(currentMessageIndex === null) return;
-        
-        if(confirm("Eliminare questo messaggio?")) {
-            const messages = getMessages();
-            messages.splice(currentMessageIndex, 1);
-            saveMessages(messages);
-            document.getElementById('messageDetail').style.display = 'none';
-            loadMessages();
-            currentMessageIndex = null;
-        }
+    .contatti-grid {
+        grid-template-columns: 1fr;
     }
 
-    // Funzioni di supporto
-    function getMessages() {
-        return JSON.parse(localStorage.getItem('proWashMessages')) || [];
+    .admin-toolbar {
+        flex-direction: column;
+    }
+}
+
+@media (max-width: 480px) {
+    .hero h2 {
+        font-size: 2rem;
     }
 
-    function saveMessages(messages) {
-        localStorage.setItem('proWashMessages', JSON.stringify(messages));
+    .hero p {
+        font-size: 1rem;
     }
 
-    function formatDate(dateString, full = false) {
-        const options = {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric'
-        };
-        
-        if(full) {
-            options.hour = '2-digit';
-            options.minute = '2-digit';
-        }
-        
-        return new Date(dateString).toLocaleDateString('it-IT', options);
+    .cta-button {
+        padding: 0.8rem 1.5rem;
     }
-
-    // ======================
-    // GESTIONE FORM CONTATTI
-    // ======================
-    const contactForm = document.getElementById('contactForm');
-    if(contactForm) {
-        contactForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            
-            const formData = new FormData(this);
-            const messages = getMessages();
-            
-            messages.push({
-                name: formData.get('name'),
-                email: formData.get('email'),
-                message: formData.get('message'),
-                date: new Date().toISOString(),
-                read: false
-            });
-            
-            saveMessages(messages);
-            alert('Messaggio inviato con successo!');
-            this.reset();
-        });
-    }
-});
+}
