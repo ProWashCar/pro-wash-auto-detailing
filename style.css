@@ -17,20 +17,24 @@ body {
     line-height: 1.6;
     color: #333;
     background: #f9f9f9;
+    padding-top: 80px;
 }
 
-/* Header */
-header {
+/* Navbar */
+.navbar {
     background: var(--primary);
     color: white;
     padding: 1rem 2rem;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    position: sticky;
+    position: fixed;
     top: 0;
-    z-index: 100;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
     box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
 }
 
 .logo-container {
@@ -42,23 +46,34 @@ header {
 .logo-img {
     background: url('Black and Blue Modern Automotive Logo.png') no-repeat center;
     background-size: contain;
-    height: 60px;
-    width: 180px;
+    height: 50px;
+    width: 150px;
 }
 
-header h1 {
-    font-size: 1.5rem;
+.navbar h1 {
+    font-size: 1.3rem;
     white-space: nowrap;
     color: white;
 }
 
-nav ul {
+/* Hamburger Menu */
+.hamburger {
+    display: none;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.5rem;
+    cursor: pointer;
+    z-index: 1001;
+}
+
+.navbar-links ul {
     display: flex;
     list-style: none;
     gap: 1.5rem;
 }
 
-nav a {
+.navbar-links a {
     color: white;
     text-decoration: none;
     font-weight: 600;
@@ -67,11 +82,11 @@ nav a {
     position: relative;
 }
 
-nav a:hover {
+.navbar-links a:hover {
     color: var(--secondary);
 }
 
-nav a::after {
+.navbar-links a::after {
     content: '';
     position: absolute;
     bottom: 0;
@@ -82,13 +97,18 @@ nav a::after {
     transition: width 0.3s;
 }
 
-nav a:hover::after {
+.navbar-links a:hover::after {
     width: 100%;
+}
+
+/* Content Wrapper */
+.content-wrapper {
+    margin-top: 20px;
 }
 
 /* Hero Section */
 .hero {
-    height: 80vh;
+    height: calc(100vh - 80px);
     position: relative;
     background: url('Black and Blue Modern Automotive Logo.png') center/cover no-repeat;
     background-color: var(--primary);
@@ -188,6 +208,8 @@ nav a:hover::after {
     border-radius: 10px;
     transition: transform 0.3s, box-shadow 0.3s;
     text-align: center;
+    opacity: 0;
+    transform: translateY(30px);
 }
 
 .servizio:hover {
@@ -244,6 +266,8 @@ nav a:hover::after {
     padding: 2rem;
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+    opacity: 0;
+    transform: translateY(30px);
 }
 
 .listino-img {
@@ -264,9 +288,6 @@ nav a:hover::after {
     margin-bottom: 3rem;
     text-align: center;
     position: relative;
-    display: inline-block;
-    left: 50%;
-    transform: translateX(-50%);
 }
 
 .contatti h2::after {
@@ -319,6 +340,8 @@ nav a:hover::after {
     display: flex;
     flex-direction: column;
     gap: 1.5rem;
+    opacity: 0;
+    transform: translateY(30px);
 }
 
 .contatti-form input,
@@ -532,53 +555,81 @@ footer {
 }
 
 /* Responsive */
-@media (max-width: 768px) {
-    header {
-        flex-direction: column;
-        padding: 1rem;
-    }
-
-    .logo-container {
-        margin-bottom: 1rem;
-    }
-
-    nav ul {
-        flex-direction: column;
-        gap: 0.5rem;
-        text-align: center;
-    }
-
-    .hero {
-        height: 70vh;
-    }
-
+@media (max-width: 992px) {
     .hero h2 {
-        font-size: 2.5rem;
+        font-size: 2.8rem;
     }
-
+    
     .servizi, .prezzi, .contatti {
-        padding: 3rem 1rem;
+        padding: 4rem 1.5rem;
     }
+}
 
-    .contatti-grid {
-        grid-template-columns: 1fr;
+@media (max-width: 768px) {
+    .hamburger {
+        display: block;
     }
-
-    .admin-toolbar {
+    
+    .navbar-links {
+        position: fixed;
+        top: 80px;
+        left: 0;
+        width: 100%;
+        background: var(--primary);
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.3s ease-out;
+        padding: 0 2rem;
+    }
+    
+    .navbar-links.active {
+        max-height: 400px;
+        padding: 1rem 2rem;
+        border-top: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .navbar-links ul {
         flex-direction: column;
+        gap: 0;
+    }
+    
+    .navbar-links li {
+        padding: 1rem 0;
+        border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .hero h2 {
+        font-size: 2.2rem;
+    }
+    
+    .hero p {
+        font-size: 1rem;
+    }
+    
+    .servizi h2, .prezzi h2, .contatti h2 {
+        font-size: 2.2rem;
     }
 }
 
 @media (max-width: 480px) {
-    .hero h2 {
-        font-size: 2rem;
+    .logo-img {
+        width: 120px;
     }
-
-    .hero p {
+    
+    .navbar h1 {
+        font-size: 1.1rem;
+    }
+    
+    .hero h2 {
+        font-size: 1.8rem;
+    }
+    
+    .cta-button {
+        padding: 0.8rem 1.8rem;
         font-size: 1rem;
     }
-
-    .cta-button {
-        padding: 0.8rem 1.5rem;
+    
+    .servizio {
+        padding: 1.5rem 1rem;
     }
 }
