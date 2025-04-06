@@ -1,22 +1,29 @@
 document.addEventListener('DOMContentLoaded', function() {
     // ======================
-    // FUNZIONALITÀ GENERALI
+    // NAVBAR MOBILE
     // ======================
+    const hamburger = document.querySelector('.hamburger');
+    const navLinks = document.querySelector('.navbar-links');
     
-    // Menu mobile
-    const menuToggle = document.createElement('button');
-    menuToggle.innerHTML = '<i class="fas fa-bars"></i>';
-    menuToggle.classList.add('menu-toggle');
-    document.querySelector('header').appendChild(menuToggle);
+    if (hamburger && navLinks) {
+        hamburger.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            hamburger.innerHTML = navLinks.classList.contains('active') ? 
+                '<i class="fas fa-times"></i>' : '<i class="fas fa-bars"></i>';
+        });
+        
+        // Chiudi menu al click su link
+        document.querySelectorAll('.navbar-links a').forEach(link => {
+            link.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+            });
+        });
+    }
 
-    const navMenu = document.querySelector('nav ul');
-    
-    menuToggle.addEventListener('click', function() {
-        navMenu.classList.toggle('show');
-        this.classList.toggle('open');
-    });
-
-    // Smooth scrolling
+    // ======================
+    // SMOOTH SCROLLING
+    // ======================
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function(e) {
             if(this.hash !== "") {
@@ -24,28 +31,39 @@ document.addEventListener('DOMContentLoaded', function() {
                 
                 const target = document.querySelector(this.hash);
                 if(target) {
+                    const navbarHeight = document.querySelector('.navbar').offsetHeight;
+                    const targetPosition = target.getBoundingClientRect().top + window.pageYOffset;
+                    
                     window.scrollTo({
-                        top: target.offsetTop - 80,
+                        top: targetPosition - navbarHeight,
                         behavior: 'smooth'
                     });
 
                     // Chiudi menu mobile se aperto
-                    navMenu.classList.remove('show');
-                    menuToggle.classList.remove('open');
+                    if (navLinks) {
+                        navLinks.classList.remove('active');
+                        if (hamburger) {
+                            hamburger.innerHTML = '<i class="fas fa-bars"></i>';
+                        }
+                    }
                 }
             }
         });
     });
 
-    // Animazioni al caricamento
+    // ======================
+    // ANIMAZIONI
+    // ======================
     const animateOnScroll = function() {
         const elements = document.querySelectorAll('.servizio, .prezzi-container, .contatti-form');
+        const navbarHeight = document.querySelector('.navbar').offsetHeight;
+        const scrollPosition = window.pageYOffset + navbarHeight;
         
         elements.forEach(element => {
-            const elementPosition = element.getBoundingClientRect().top;
-            const screenPosition = window.innerHeight / 1.2;
+            const elementPosition = element.getBoundingClientRect().top + window.pageYOffset;
+            const screenPosition = window.innerHeight + scrollPosition;
             
-            if(elementPosition < screenPosition) {
+            if(elementPosition < screenPosition * 0.85) {
                 element.style.opacity = '1';
                 element.style.transform = 'translateY(0)';
             }
@@ -53,46 +71,46 @@ document.addEventListener('DOMContentLoaded', function() {
     };
 
     // Imposta stato iniziale animazioni
-    const servizi = document.querySelectorAll('.servizio');
-    const prezziContainer = document.querySelector('.prezzi-container');
-    const contattiForm = document.querySelector('.contatti-form');
-    
-    servizi.forEach(servizio => {
-        servizio.style.opacity = '0';
-        servizio.style.transform = 'translateY(30px)';
-        servizio.style.transition = 'all 0.6s ease-out';
-    });
-    
-    if(prezziContainer) {
-        prezziContainer.style.opacity = '0';
-        prezziContainer.style.transform = 'translateY(30px)';
-        prezziContainer.style.transition = 'all 0.6s ease-out 0.2s';
-    }
-    
-    if(contattiForm) {
-        contattiForm.style.opacity = '0';
-        contattiForm.style.transform = 'translateY(30px)';
-        contattiForm.style.transition = 'all 0.6s ease-out 0.4s';
-    }
+    window.addEventListener('load', function() {
+        const servizi = document.querySelectorAll('.servizio');
+        const prezziContainer = document.querySelector('.prezzi-container');
+        const contattiForm = document.querySelector('.contatti-form');
+        
+        servizi.forEach((servizio, index) => {
+            servizio.style.transition = `all 0.6s ease-out ${index * 0.1}s`;
+        });
+        
+        if(prezziContainer) {
+            prezziContainer.style.transition = 'all 0.6s ease-out 0.2s';
+        }
+        
+        if(contattiForm) {
+            contattiForm.style.transition = 'all 0.6s ease-out 0.4s';
+        }
 
-    // Esegui animazioni
-    animateOnScroll();
+        animateOnScroll();
+    });
+
     window.addEventListener('scroll', animateOnScroll);
 
-    // Header che cambia allo scroll
-    window.addEventListener('scroll', function() {
-        const header = document.querySelector('header');
-        if(window.scrollY > 100) {
-            header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-            header.style.background = 'rgba(44, 62, 80, 0.95)';
-        } else {
-            header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
-            header.style.background = 'var(--primary)';
-        }
-    });
+    // ======================
+    // HEADER SCROLL EFFECT
+    // ======================
+    const header = document.querySelector('.navbar');
+    if (header) {
+        window.addEventListener('scroll', function() {
+            if(window.scrollY > 100) {
+                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
+                header.style.background = 'rgba(44, 62, 80, 0.95)';
+            } else {
+                header.style.boxShadow = '0 2px 10px rgba(0,0,0,0.1)';
+                header.style.background = 'var(--primary)';
+            }
+        });
+    }
 
     // ======================
-    // FUNZIONALITÀ ADMIN
+    // ADMIN PANEL
     // ======================
     const ADMIN_PASSWORD = "ProWash2024"; // CAMBIA IN PRODUZIONE!
     let currentMessageIndex = null;
@@ -105,15 +123,14 @@ document.addEventListener('DOMContentLoaded', function() {
     const deleteMessageBtn = document.getElementById('deleteMessage');
     const messageSearch = document.getElementById('messageSearch');
 
-    // Mostra pulsante admin
-    adminAccessBtn.style.display = 'flex';
+    if (adminAccessBtn) adminAccessBtn.style.display = 'flex';
 
     // Event Listeners
-    adminAccessBtn.addEventListener('click', showAdminPanel);
-    closeAdminPanel.addEventListener('click', hideAdminPanel);
-    refreshMessages.addEventListener('click', loadMessages);
-    deleteMessageBtn.addEventListener('click', deleteCurrentMessage);
-    messageSearch.addEventListener('input', loadMessages);
+    if (adminAccessBtn) adminAccessBtn.addEventListener('click', showAdminPanel);
+    if (closeAdminPanel) closeAdminPanel.addEventListener('click', hideAdminPanel);
+    if (refreshMessages) refreshMessages.addEventListener('click', loadMessages);
+    if (deleteMessageBtn) deleteMessageBtn.addEventListener('click', deleteCurrentMessage);
+    if (messageSearch) messageSearch.addEventListener('input', loadMessages);
 
     // Funzioni principali
     function showAdminPanel() {
